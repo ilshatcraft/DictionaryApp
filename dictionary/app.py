@@ -20,7 +20,7 @@ firebase_admin.initialize_app(cred,{
 
 
 ref=db.reference('test/')
-
+user=db.reference('Users/')
 
 
 incomes=[
@@ -35,8 +35,21 @@ def hello():
 @app.route('/reg',methods=['POST'],strict_slashes=False)
 def registration():
     data=json.loads(request.get_json())
-    result = userModel.UserSchema().load(json.loads(request.get_json()))
-    print(result)
+    person = userModel.UserSchema().load(json.loads(request.get_json()))
+    incomes.append(person)
+    print(jsonify(userModel.UserSchema().dump(person)))
+    print(person)
+    #user.push(userModel.User(person))
+    person["WordsListnew"]=({'t':'t'})
+    person["WordsListrepeating"]=({'t':'t'})
+    person["WordsListLearned"]=({'t':'t'})
+    db.reference(str(str('Users/')+person['email'])+str('/')).set((person) ) 
+    #db.reference(str(str('Users/')+person['email'])+str('/')).set((person) ) 
+    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListnew':{'t':'t'}})
+    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListrepeating':{'t':'t'}})
+    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListLearned':{'t':'t'}})
+    
+    
     incomes.append(json.loads(request.get_json()))
     return 'ok',204
 

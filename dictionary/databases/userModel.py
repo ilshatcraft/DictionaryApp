@@ -6,10 +6,10 @@ from marshmallow import Schema, fields
 class User(object):
     def __init__(self, email,name,password,confirm_password)-> None:
         self.email = email
-        
         self.name=name
         self.password = password
         self.created_at = dt.datetime.now()
+        
       
 class UserSchema(Schema):
             email=fields.Str()
@@ -17,7 +17,7 @@ class UserSchema(Schema):
             password=fields.Str()
             confirm_password=fields.Str()
             created_at = fields.DateTime()
- 
+           
 user_data = {'email': '2023-02-07T11:56:30.355686',
  'name': 'A greeting (salutation) said when meeting someone or '
                 'acknowledging someones arrival or presence.',
