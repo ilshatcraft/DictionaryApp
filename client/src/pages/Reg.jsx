@@ -12,7 +12,19 @@ const Reg = () => {
         'Content-Type': 'application/json'
       }
     };
-    const json = await ky.post('http://127.0.0.1:5000/reg', { json: req, ...options })
+    const json = await ky.post('http://127.0.0.1:5000/reg', { json: req, ...options ,  hooks: {
+      beforeError: [
+        error => {
+          const {response} = error;
+          if (response && response.body) {
+            error.name = 'MailAlreadyExist';
+            error.message = `${response.body.message} (${response.status})`;
+          }
+  
+          return error;
+        }
+      ]
+    }       },)
 
   }
  
@@ -37,11 +49,12 @@ const Reg = () => {
   <>
     <form className="form-box" onSubmit={handleSubmit(onSubmit)} >
  <div className="Row" >
-          <input placeholder="email" {...register("email", { required: true, maxLength: 25 , pattern: {
+          <input placeholder="email" {...register("email", { required:  "This field is required", maxLength: 25 , pattern: {
+            
             value: /\S+@\S+\.\S+/,
             message: "Entered value does not match email format"
           }})} />
-          {errors.email && <span>This field is required*</span>}
+          {errors.email && <span>{errors.email.message}*</span>}
 
 
 

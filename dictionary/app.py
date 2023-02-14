@@ -44,6 +44,7 @@ def registration():
     
     
     
+    
     person["password"]=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
     
     incomes.append(person)
@@ -54,16 +55,22 @@ def registration():
     person["WordsListrepeating"]=({'t':'t'})
     person["WordsListLearned"]=({'t':'t'})
     
+    
     hashmail=(hashlib.sha1(person['email'].encode('utf-8'))).hexdigest()
     
+    Users=user.get()
+    print(Users)
+    
+    keys = Users.keys()
+
+    for key in keys:
+         if key==hashmail:
+             return 'User with that email already exists',408
+         
+         
     db.reference(str(str('Users/')+hashmail)+str('/')).set((person) ) 
-    
-    #db.reference(str(str('Users/')+person['email'])+str('/')).set((person) ) 
-    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListnew':{'t':'t'}})
-    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListrepeating':{'t':'t'}})
-    #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListLearned':{'t':'t'}})
-    
-    
+
+
     incomes.append(json.loads(request.get_json()))
     return 'ok',204
 
