@@ -4,7 +4,7 @@ from marshmallow import Schema, fields
 
 
 class User(object):
-    def __init__(self, email,name,password,confirm_password)-> None:
+    def __init__(self, email,name,password)-> None:
         self.email = email
         self.name=name
         self.password = password
@@ -15,7 +15,6 @@ class UserSchema(Schema):
             email=fields.Str()
             name=fields.Str()
             password=fields.Str()
-            confirm_password=fields.Str()
             created_at = fields.DateTime()
            
 user_data = {'email': '2023-02-07T11:56:30.355686',

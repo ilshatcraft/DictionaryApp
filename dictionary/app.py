@@ -1,6 +1,11 @@
 from flask import Flask, request, jsonify, url_for, Blueprint
 from flask_cors import CORS
 import json
+
+import hashlib
+
+
+
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -36,6 +41,11 @@ def hello():
 def registration():
     data=json.loads(request.get_json())
     person = userModel.UserSchema().load(json.loads(request.get_json()))
+    
+    
+    
+    person["password"]=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
+    
     incomes.append(person)
     print(jsonify(userModel.UserSchema().dump(person)))
     print(person)
@@ -43,7 +53,11 @@ def registration():
     person["WordsListnew"]=({'t':'t'})
     person["WordsListrepeating"]=({'t':'t'})
     person["WordsListLearned"]=({'t':'t'})
-    db.reference(str(str('Users/')+person['email'])+str('/')).set((person) ) 
+    
+    hashmail=(hashlib.sha1(person['email'].encode('utf-8'))).hexdigest()
+    
+    db.reference(str(str('Users/')+hashmail)+str('/')).set((person) ) 
+    
     #db.reference(str(str('Users/')+person['email'])+str('/')).set((person) ) 
     #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListnew':{'t':'t'}})
     #db.reference(str(str('Users/')+person['email'])+str('/')).update({'WordsListrepeating':{'t':'t'}})
