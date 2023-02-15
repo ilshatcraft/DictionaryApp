@@ -1,18 +1,21 @@
 import { useForm } from "react-hook-form";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import "./Reg.scss"
 import ky from 'ky'
 
 const Reg = () => {
-  
+  const [errMail,setErrMail]=useState('')
   const postRegistration=async(req)=>{
+    
     const options = {
       headers: {
         'Content-Type': 'application/json'
       }
     };
+    try{setErrMail("")
     const json = await ky.post('http://127.0.0.1:5000/reg', { json: req, ...options ,  hooks: {
+      
       beforeError: [
         error => {
           const {response} = error;
@@ -20,11 +23,11 @@ const Reg = () => {
             error.name = 'MailAlreadyExist';
             error.message = `${response.body.message} (${response.status})`;
           }
-  
+          setErrMail("User with that email already exists*")
           return error;
         }
       ]
-    }       },)
+    }       },)}catch(e) { if (error.name === 'HTTPError') {} }
 
   }
  
@@ -55,6 +58,7 @@ const Reg = () => {
             message: "Entered value does not match email format"
           }})} />
           {errors.email && <span>{errors.email.message}*</span>}
+          <span>{errMail}</span>
 
 
 

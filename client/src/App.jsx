@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Reg from './pages/Reg'
 import {createBrowserRouter,createRoutesFromElements,Link,Route,Outlet, RouterProvider} from 'react-router-dom'
 import './App.scss'
+import User from './pages/User'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
      <Route index element={<Home/>}/>
 
      <Route  path="/reg" element={<Reg/>}/>
+     <Route  path="/user" element={<User/>}/>
   </Route>
  )
 
@@ -30,6 +32,8 @@ const Root =()=>{
    <div> 
     <Link to="/" >Home   </Link>
     <Link to="/reg">     Reg</Link>
+    <Link to="/user">     User</Link>
+
   </div>
   <div>
     <Outlet/>
