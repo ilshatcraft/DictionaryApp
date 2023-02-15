@@ -37,14 +37,21 @@ def hello():
     return jsonify(str(ref.get())+str(incomes))
 
 
+
+
+
+
+
+
+
+
+
+
 @app.route('/reg',methods=['POST'],strict_slashes=False)
 def registration():
     data=json.loads(request.get_json())
     person = userModel.UserSchema().load(json.loads(request.get_json()))
-    
-    
-    
-    
+
     person["password"]=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
     
     incomes.append(person)
@@ -72,7 +79,7 @@ def registration():
 
 
     incomes.append(json.loads(request.get_json()))
-    return 'ok',204
+    return ('Successfully registered.', 201)
 
 
 
