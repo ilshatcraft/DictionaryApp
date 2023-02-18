@@ -15,3 +15,4 @@ class wordSchema(Schema):
        url=fields.Str()
        description=fields.Str()
        created_at = fields.DateTime()
+       
