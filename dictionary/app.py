@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify, url_for, Blueprint
 from flask_cors import CORS
 import json
-
+import jwt
 import hashlib
-
-
+from functools import wraps
+import datetime as dt
 
 import firebase_admin
 from firebase_admin import credentials
@@ -16,7 +16,14 @@ from databases import userModel , wordsModel
 
 
 app = Flask(__name__)
+
 CORS(app)
+
+# configuration
+# NEVER HARDCODE YOUR CONFIGURATION IN YOUR CODE
+# INSTEAD CREATE A .env FILE AND STORE IN IT
+app.config['SECRET_KEY'] = 'your secret key'
+
 
 cred = credentials.Certificate("dictionary-b05f2-firebase-adminsdk-vikws-fd957889d2.json")
 firebase_admin.initialize_app(cred,{
@@ -39,12 +46,73 @@ def hello():
 
 
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        # jwt is passed in the request header
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        # return 401 if token is not passed
+        if not token:
+            return jsonify({'message' : 'Token is missing !!'}), 401
+  
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            current_user = User.query\
+                .filter_by(public_id = data['public_id'])\
+                .first()
+        except:
+            return jsonify({
+                'message' : 'Token is invalid !!'
+            }), 401
+        # returns the current logged in users context to the routes
+        return  f(current_user, *args, **kwargs)
+  
+    return decorated
 
 
 
+@app.route('/login', methods =['POST'])
+def login():
+    # creates dictionary of form data
+    data=json.loads(request.get_json())
+    person = userModel.UserLoggingSchema().load(json.loads(request.get_json()))
 
+    hashmail=(hashlib.sha1(person['email'].encode('utf-8'))).hexdigest()
+    hashpswd=(hashlib.sha1(person['passsword'].encode('utf-8'))).hexdigest()
+    
+    
+    Users=user.get()
+    print(Users)
+    
+    keys = Users.keys()
 
+    for key in keys:
+         if key==hashmail:
+               if Users[key]==hashpswd :
 
+                           token = jwt.encode({
+                                 'public_id': hashmail,
+                                 'exp' : dt.utcnow() + timedelta(minutes = 30)
+                                }, app.config['SECRET_KEY'])
+  
+                           return make_response(jsonify({'token' : token.decode('UTF-8')}), 201)
+           
+               return   make_response(
+           'Could not verify',
+            401,
+            { "Wrong Password !!"}
+         )         
+                       
+                       
+         return   make_response(
+           'Could not verify',
+            401,
+            { "User does not exist !!"}
+         )  
+            
 
 
 @app.route('/reg',methods=['POST'],strict_slashes=False)

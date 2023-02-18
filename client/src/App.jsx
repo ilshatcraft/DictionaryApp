@@ -4,9 +4,13 @@ import Reg from './pages/Reg'
 import {createBrowserRouter,createRoutesFromElements,Link,Route,Outlet, RouterProvider} from 'react-router-dom'
 import './App.scss'
 import User from './pages/User'
+import Login from './pages/Login'
+import ProtectedRoute from './pages/ProtectedRoute'
 
 
 function App() {
+ var user=false
+
 
   const router= createBrowserRouter(
  createRoutesFromElements(
@@ -14,7 +18,10 @@ function App() {
      <Route index element={<Home/>}/>
 
      <Route  path="/reg" element={<Reg/>}/>
-     <Route  path="/user" element={<User/>}/>
+      <Route  path="/login" element={<Login/>}/> 
+     <Route  path="/user" element={<ProtectedRoute user={user}> <User/></ProtectedRoute>}/> 
+
+     <Route path="*" element={<p>There's nothing here: 404!</p>} />
   </Route>
  )
 
