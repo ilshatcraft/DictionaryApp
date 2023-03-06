@@ -5,6 +5,7 @@ import jwt
 import hashlib
 from functools import wraps
 import datetime as dt
+from datetime import timedelta
 
 import firebase_admin
 from firebase_admin import credentials
@@ -60,15 +61,22 @@ def token_required(f):
         try:
             # decoding the payload to fetch the stored details
             data = jwt.decode(token, app.config['SECRET_KEY'])
-            current_user = User.query\
-                .filter_by(public_id = data['public_id'])\
-                .first()
+            Users=user.get()
+            keys = Users.keys()
+            exits=False
+            for key in keys:
+              if key==data['public_id']:
+                exits=True
+            if exits==False:
+                raise Exception 
+            
+            
         except:
             return jsonify({
                 'message' : 'Token is invalid !!'
             }), 401
         # returns the current logged in users context to the routes
-        return  f(current_user, *args, **kwargs)
+        return  f(Users[data['public_id']], *args, **kwargs)
   
     return decorated
 
@@ -80,38 +88,38 @@ def login():
     data=json.loads(request.get_json())
     person = userModel.UserLoggingSchema().load(json.loads(request.get_json()))
 
-    hashmail=(hashlib.sha1(person['email'].encode('utf-8'))).hexdigest()
-    hashpswd=(hashlib.sha1(person['passsword'].encode('utf-8'))).hexdigest()
-    
+    hashmail=(hashlib.sha1(person["email"].encode('utf-8'))).hexdigest()
+    hashpswd=(hashlib.sha1(person["password"].encode('utf-8'))).hexdigest()
+    print(hashmail)
+    print(hashpswd)
+    print("f")
     
     Users=user.get()
     print(Users)
     
     keys = Users.keys()
-
-    for key in keys:
-         if key==hashmail:
-               if Users[key]==hashpswd :
-
+    
+    try:
+        for key in keys:
+          if key==hashmail:
+              print(key)
+              if Users[key]==hashpswd :
+                           print(Users[key])
                            token = jwt.encode({
                                  'public_id': hashmail,
                                  'exp' : dt.utcnow() + timedelta(minutes = 30)
                                 }, app.config['SECRET_KEY'])
   
-                           return make_response(jsonify({'token' : token.decode('UTF-8')}), 201)
-           
-               return   make_response(
-           'Could not verify',
-            401,
-            { "Wrong Password !!"}
-         )         
+                           return (jsonify({'token' : token.decode('UTF-8')}), 201)
+
+              return ( 'Could not verify' )         
+    except ValueError:
+        return   ('Could not verify',401)  
+
+    
                        
                        
-         return   make_response(
-           'Could not verify',
-            401,
-            { "User does not exist !!"}
-         )  
+    
             
 
 

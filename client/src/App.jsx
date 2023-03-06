@@ -40,7 +40,7 @@ const Root =()=>{
     <Link to="/" >Home   </Link>
     <Link to="/reg">     Reg</Link>
     <Link to="/user">     User</Link>
-
+    <Link to="/login">     Login</Link>
   </div>
   <div>
     <Outlet/>
