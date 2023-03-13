@@ -86,10 +86,11 @@ def token_required(f):
 def login():
     # creates dictionary of form data
     data=json.loads(request.get_json())
+    print(data)
     person = userModel.UserLoggingSchema().load(json.loads(request.get_json()))
 
     hashmail=(hashlib.sha1(person["email"].encode('utf-8'))).hexdigest()
-    hashpswd=(hashlib.sha1(person["password"].encode('utf-8'))).hexdigest()
+    hashpswd=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
     print(hashmail)
     print(hashpswd)
     print("f")
@@ -97,14 +98,14 @@ def login():
     Users=user.get()
     print(Users)
     
-    keys = Users.keys()
+    mails = Users.keys()
     
     try:
-        for key in keys:
-          if key==hashmail:
-              print(key)
-              if Users[key]==hashpswd :
-                           print(Users[key])
+        for mail in mails:
+          if mail==hashmail:
+              print(Users[mail])
+              if Users[mail]==hashpswd :
+                           print(Users[mail])
                            token = jwt.encode({
                                  'public_id': hashmail,
                                  'exp' : dt.utcnow() + timedelta(minutes = 30)
@@ -112,7 +113,7 @@ def login():
   
                            return (jsonify({'token' : token.decode('UTF-8')}), 201)
 
-              return ( 'Could not verify' )         
+              return ( 'Could not verify', 402)         
     except ValueError:
         return   ('Could not verify',401)  
 

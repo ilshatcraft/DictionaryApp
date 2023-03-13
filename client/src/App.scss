@@ -5,8 +5,28 @@
   display: flex;
 
 }
+a{
+  text-decoration: none;
+  color: black;
+}
 
 :root{
  display: flex;
  justify-content: center;
+ 
+}
+.header{
+  align-items: center;
+  background-color: rgba(156, 217, 210,0.4);
+  display: block;
+  width: 100%;
+  padding: .5rem .8rem .5rem .8rem;
+  margin: .9vw 0 ;
+  border:0;
+  border-radius: 5px;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: 2;
+  
+
 }
