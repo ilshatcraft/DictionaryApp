@@ -5,7 +5,7 @@ import jwt
 import hashlib
 from functools import wraps
 import datetime as dt
-from datetime import timedelta
+
 
 import firebase_admin
 from firebase_admin import credentials
@@ -17,6 +17,7 @@ from databases import userModel , wordsModel
 
 
 app = Flask(__name__)
+app.debug = True
 
 CORS(app)
 
@@ -37,7 +38,7 @@ user=db.reference('Users/')
 
 
 incomes=[
-    {'hello':'1','f':'dddd'},
+    {'hello':'1','f':'23sadsfd4'},
 ]
 
 @app.route('/')
@@ -86,32 +87,30 @@ def token_required(f):
 def login():
     # creates dictionary of form data
     data=json.loads(request.get_json())
-    print(data)
     person = userModel.UserLoggingSchema().load(json.loads(request.get_json()))
 
     hashmail=(hashlib.sha1(person["email"].encode('utf-8'))).hexdigest()
     hashpswd=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
-    print(hashmail)
-    print(hashpswd)
-    print("f")
+   
     
     Users=user.get()
-    print(Users)
     
     mails = Users.keys()
-    
+   
     try:
         for mail in mails:
           if mail==hashmail:
-              print(Users[mail])
-              if Users[mail]==hashpswd :
-                           print(Users[mail])
+              
+              
+              if (Users[mail])["password"]==hashpswd :
+                           
                            token = jwt.encode({
                                  'public_id': hashmail,
-                                 'exp' : dt.utcnow() + timedelta(minutes = 30)
+                                 'exp' : dt.datetime.utcnow() + dt.timedelta(minutes = 30)
                                 }, app.config['SECRET_KEY'])
-  
-                           return (jsonify({'token' : token.decode('UTF-8')}), 201)
+                           response = jsonify({'token': token})
+                           response.headers['Authorization'] = 'Bearer ' + token
+                           return (response, 201)
 
               return ( 'Could not verify', 402)         
     except ValueError:
