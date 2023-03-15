@@ -6,7 +6,7 @@ import './App.scss'
 import User from './pages/User'
 import Login from './pages/Login'
 import ProtectedRoute from './pages/ProtectedRoute'
-
+import authStore  from './store'
 
 function App() {
  var user=false
@@ -19,7 +19,7 @@ function App() {
 
      <Route  path="/reg" element={<Reg/>}/>
       <Route  path="/login" element={<Login/>}/> 
-     <Route  path="/user" element={<ProtectedRoute user={user}> <User/></ProtectedRoute>}/> 
+     <Route  path="/user" element={<ProtectedRoute > <User/></ProtectedRoute>}/> 
 
      <Route path="*" element={<p>There's nothing here: 404!</p>} />
   </Route>

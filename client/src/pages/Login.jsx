@@ -3,16 +3,23 @@ import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import "./Reg.scss"
 import ky from 'ky'
+import authStore from '../store';
+
 
 
 
 
 function User() {
 
+    const jwt=authStore((state)=>(state.token))
+ 
+    const addToken=authStore((state)=>state.setToken)
+
+
     const [errMail,setErrMail]=useState('')
 
 
-    const postRegistration=async(req)=>{
+    const postAuth=async(req)=>{
     
         const options = {
           headers: {
@@ -26,6 +33,7 @@ function User() {
         } 
            },)
            console.log(json)
+           addToken(json)
         }catch(e) { if (error.name === 'HTTPError') {} }
     
       }
@@ -34,40 +42,47 @@ function User() {
     
     const onSubmit = data => {delete data['confirm_password'];
     console.log(JSON.stringify(data) )
-      postRegistration(JSON.stringify(data))
+    postAuth(JSON.stringify(data))
     };
 
 
     return ( <>
-    <form className="form-box" onSubmit={handleSubmit(onSubmit)} >
- <div className="Row" >
-          <input placeholder="email" {...register("email", { required:  "This field is required", maxLength: 25 , pattern: {
+
+{jwt ? (
+        <div>Authenticated with JWT: </div>
+      ) : (
+        <form className="form-box" onSubmit={handleSubmit(onSubmit)} >
+        <div className="Row" >
+                 <input placeholder="email" {...register("email", { required:  "This field is required", maxLength: 25 , pattern: {
+                   
+                   value: /\S+@\S+\.\S+/,
+                   message: "Entered value does not match email format"
+                 }})} />
+                 {errors.email && <span>{errors.email.message}*</span>}
+                 <span>{errMail}</span>
+       
+       
+       
+                 
+       
+       
+                 <input placeholder="password"
+                   {...register("password", {
+                     required: true
+                   })}
+                 />
+       
+                 {errors.password && <span>This field is required*</span>}
+       
+                
+       
             
-            value: /\S+@\S+\.\S+/,
-            message: "Entered value does not match email format"
-          }})} />
-          {errors.email && <span>{errors.email.message}*</span>}
-          <span>{errMail}</span>
-
-
-
-          
-
-
-          <input placeholder="password"
-            {...register("password", {
-              required: true
-            })}
-          />
-
-          {errors.password && <span>This field is required*</span>}
-
-         
-
-     
-      <input type="submit" />
-      </div>
-    </form> 
+             <input type="submit" />
+             </div>
+           </form> 
+      )}
+    
+   
     
     </> );
 }

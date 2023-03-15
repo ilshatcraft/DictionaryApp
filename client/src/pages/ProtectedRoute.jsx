@@ -1,11 +1,19 @@
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({
-    user,
-    redirectPath = '/',
+import authStore from "../store";
+
+
+
+const ProtectedRoute = (
+  
+  {
+
+
+  
+    redirectPath = '/Login',
     children,
   }) => {
-    if (!user) {
+    if (!authStore((state)=>state.token)) {
       return <Navigate to={redirectPath} replace />;
     }
   

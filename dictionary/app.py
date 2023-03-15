@@ -82,6 +82,11 @@ def token_required(f):
     return decorated
 
 
+@app.route('/UserInfo')
+@token_required
+def returnInfo():
+    return ("hi")
+
 
 @app.route('/login', methods =['POST'])
 def login():
