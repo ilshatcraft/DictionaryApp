@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint ,make_response
 from flask_cors import CORS
 import json
 import jwt
@@ -17,14 +17,15 @@ from databases import userModel , wordsModel
 
 
 app = Flask(__name__)
+CORS(app)
+
 app.debug = True
 
-CORS(app)
 
 # configuration
 # NEVER HARDCODE YOUR CONFIGURATION IN YOUR CODE
 # INSTEAD CREATE A .env FILE AND STORE IN IT
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = '62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a'
 
 
 cred = credentials.Certificate("dictionary-b05f2-firebase-adminsdk-vikws-fd957889d2.json")
@@ -35,11 +36,44 @@ firebase_admin.initialize_app(cred,{
 
 ref=db.reference('test/')
 user=db.reference('Users/')
-
+algorithms = 'sha256'  
 
 incomes=[
     {'hello':'1','f':'23sadsfd4'},
 ]
+
+def token_required(f):
+   @wraps(f)
+   def decorator(*args, **kwargs):
+       token = None
+       if 'x-access-tokens' in request.headers:
+           token = request.headers['x-access-tokens']
+ 
+       if not token:
+           return jsonify({'message': 'a valid token is missing'})
+       try:
+           data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+
+           Users=user.get()
+    
+           mails = Users.keys()
+   
+           try:
+            for mail in mails:
+             if mail==hashmail:
+
+
+              return ( 'Could not verify', 402)         
+           except ValueError:
+                return   ('Could not verify',401)   
+
+            
+       except:
+           return jsonify({'message': 'token is invalid'})
+ 
+       return f(current_user, *args, **kwargs)
+   return decorator
+
 
 @app.route('/')
 def hello():
@@ -48,44 +82,14 @@ def hello():
 
 
 
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-        # return 401 if token is not passed
-        if not token:
-            return jsonify({'message' : 'Token is missing !!'}), 401
-  
-        try:
-            # decoding the payload to fetch the stored details
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            Users=user.get()
-            keys = Users.keys()
-            exits=False
-            for key in keys:
-              if key==data['public_id']:
-                exits=True
-            if exits==False:
-                raise Exception 
-            
-            
-        except:
-            return jsonify({
-                'message' : 'Token is invalid !!'
-            }), 401
-        # returns the current logged in users context to the routes
-        return  f(Users[data['public_id']], *args, **kwargs)
-  
-    return decorated
 
 
-@app.route('/UserInfo')
+
+@app.route('/UserInfo',methods=['Post','GET'])
 @token_required
 def returnInfo():
     return ("hi")
+
 
 
 @app.route('/login', methods =['POST'])
@@ -103,19 +107,26 @@ def login():
     mails = Users.keys()
    
     try:
+        
         for mail in mails:
           if mail==hashmail:
               
               
               if (Users[mail])["password"]==hashpswd :
-                           
-                           token = jwt.encode({
-                                 'public_id': hashmail,
-                                 'exp' : dt.datetime.utcnow() + dt.timedelta(minutes = 30)
-                                }, app.config['SECRET_KEY'])
-                           response = jsonify({'token': token})
-                           response.headers['Authorization'] = 'Bearer ' + token
-                           return (response, 201)
+
+                          token = jwt.encode({'public_id': hashmail,'exp': dt.datetime.utcnow() + dt.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+    
+                        #  create response with token
+                          response_data = {'token': token}
+                          response_headers = {'Authorization': f'Bearer {token}'}
+                          response = make_response(jsonify(response_data), 201)
+                          
+                          response.headers.extend(response_headers)
+                          
+                          print(token)
+                          print()
+                          print(response)
+                          return response
 
               return ( 'Could not verify', 402)         
     except ValueError:

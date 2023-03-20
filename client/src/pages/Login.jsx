@@ -11,10 +11,11 @@ import authStore from '../store';
 
 function User() {
 
-    const jwt=authStore((state)=>(state.token))
- 
+    
+    
     const addToken=authStore((state)=>state.setToken)
-
+    
+    const deleteToken=authStore((state)=>state.removeToken)
 
     const [errMail,setErrMail]=useState('')
 
@@ -23,33 +24,43 @@ function User() {
     
         const options = {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '
           }
         };
-        try{setErrMail("")
-        const json = await ky.post('http://127.0.0.1:5000/login', { json: req, ...options ,  hooks: {
-          
-          
-        } 
-           },)
-           console.log(json)
-           addToken(json)
-        }catch(e) { if (error.name === 'HTTPError') {} }
+  
+ 
     
+      try {
+        const response = await ky.post('http://127.0.0.1:5000/login', 
+          { json: req, ...options ,  hooks: { } },
+        );
+        const data = await response.json();
+        const token = data.token;
+        addToken(token);
+        console.log(token);
+      } catch (error) {
+        console.error(error);
+      }
+  
+
+
       }
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     
     const onSubmit = data => {delete data['confirm_password'];
-    console.log(JSON.stringify(data) )
+    console.log(jwt)
     postAuth(JSON.stringify(data))
     };
-
+    const jwt=authStore((state)=>(state.token))
 
     return ( <>
 
-{jwt ? (
-        <div>Authenticated with JWT: </div>
+{jwt ? (<>
+        <div>Authenticated with JWT:{} </div>
+        <button onClick={() =>{deleteToken()}}> Log Out</button>
+        </>
       ) : (
         <form className="form-box" onSubmit={handleSubmit(onSubmit)} >
         <div className="Row" >
@@ -80,9 +91,11 @@ function User() {
              <input type="submit" />
              </div>
            </form> 
+           
+           
       )}
     
-   
+ 
     
     </> );
 }
