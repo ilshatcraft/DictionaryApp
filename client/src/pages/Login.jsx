@@ -39,8 +39,11 @@ function User() {
         const token = data.token;
         addToken(token);
         console.log(token);
+       
       } catch (error) {
         console.error(error);
+        error.response.text().then(errorMessage => {
+          console.log(errorMessage); });
       }
   
 

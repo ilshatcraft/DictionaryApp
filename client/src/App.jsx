@@ -7,6 +7,10 @@ import User from './pages/User'
 import Login from './pages/Login'
 import ProtectedRoute from './pages/ProtectedRoute'
 import authStore  from './store'
+import { QueryClient, QueryClientProvider, useQuery} from 'react-query';
+
+
+const queryClient = new QueryClient()
 
 function App() {
  var user=false
@@ -35,7 +39,7 @@ function App() {
 }
 
 const Root =()=>{
-  return <>
+  return <QueryClientProvider client={queryClient}>
    <div className="header"> 
     <Link to="/" >Home   </Link>
     
@@ -46,7 +50,8 @@ const Root =()=>{
   <div>
     <Outlet/>
   </div>
-  </>
+  </QueryClientProvider>
+  
 }
 
 

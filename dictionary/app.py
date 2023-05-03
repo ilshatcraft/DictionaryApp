@@ -46,32 +46,33 @@ def token_required(f):
    @wraps(f)
    def decorator(*args, **kwargs):
        token = None
-       if 'x-access-tokens' in request.headers:
-           token = request.headers['x-access-tokens']
- 
+       print(request.headers)
+       print("token sended")
+       if 'X-Access-Token' in request.headers:
+           token = request.headers['X-Access-Token']
+           print(' token geted')
+        
        if not token:
            return jsonify({'message': 'a valid token is missing'})
        try:
-           data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-
-           Users=user.get()
-    
-           mails = Users.keys()
-   
-           try:
-            for mail in mails:
-             if mail==hashmail:
-
-
-              return ( 'Could not verify', 402)         
-           except ValueError:
-                return   ('Could not verify',401)   
-
+          data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+       except jwt.exceptions.ExpiredSignatureError:
+            return('expired', 401)
+       
+       print( (db.reference(str(str('Users/')+str(data["public_id"]))+str('/email')).get()) )
             
-       except:
-           return jsonify({'message': 'token is invalid'})
+       if ((hashlib.sha256(( (db.reference(str(str('Users/')+str(data["public_id"]))+str('/email')).get())).encode('utf-8')))).hexdigest()==data["public_id"]:
+               pass 
+               print("ok")
+       else:
+             return ( 'Could not verify', 401)         
+          
+
+       return f(*args, **kwargs)     
+    #    except:
+    #        return jsonify({'message': 'token is invalid'})
  
-       return f(current_user, *args, **kwargs)
+       
    return decorator
 
 
@@ -85,10 +86,15 @@ def hello():
 
 
 
-@app.route('/UserInfo',methods=['Post','GET'])
+@app.route('/UserInfo',methods=['GET'])
 @token_required
 def returnInfo():
-    return ("hi")
+     print('hi')
+     data = {'message': 'hi'}
+     response = jsonify(data)
+     response.status_code = 201
+     return response
+
 
 
 
@@ -98,7 +104,7 @@ def login():
     data=json.loads(request.get_json())
     person = userModel.UserLoggingSchema().load(json.loads(request.get_json()))
 
-    hashmail=(hashlib.sha1(person["email"].encode('utf-8'))).hexdigest()
+    hashmail=(hashlib.sha256(person["email"].encode('utf-8'))).hexdigest()
     hashpswd=(hashlib.sha256(person["password"].encode('utf-8'))).hexdigest()
    
     
@@ -155,7 +161,7 @@ def registration():
     person["WordsListLearned"]=({'t':'t'})
     
     
-    hashmail=(hashlib.sha1(person['email'].encode('utf-8'))).hexdigest()
+    hashmail=(hashlib.sha256(person['email'].encode('utf-8'))).hexdigest()
     
     Users=user.get()
     print(Users)
