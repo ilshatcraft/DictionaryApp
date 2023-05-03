@@ -164,7 +164,7 @@ def registration():
     hashmail=(hashlib.sha256(person['email'].encode('utf-8'))).hexdigest()
     
     Users=user.get()
-    print(Users)
+   # print(Users)
     
     keys = Users.keys()
 
@@ -176,7 +176,7 @@ def registration():
     db.reference(str(str('Users/')+hashmail)+str('/')).set((person) ) 
 
 
-    incomes.append(json.loads(request.get_json()))
+    print(" /")
     return ('Successfully registered.', 201)
 
 

@@ -77,7 +77,7 @@ function User() {
   
     user d
      {data}
-     <button onClick={remtoken}></button>
+     
      </> );
 }
 
