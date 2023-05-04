@@ -2,7 +2,6 @@ import datetime as dt
 from marshmallow import Schema, fields
 
 
-from pprint import pprint
 
 class word:
     def __init__(self,word,rating,url,description) -> None:
@@ -37,13 +36,6 @@ schema = wordSchema(many=True)
 
 # result = schema.load(user_data)
 # pprint(result)
-l=[
-    word("Monty", 5,"https://api.dictionaryapi.dev/api/v2/entries/en/hello","A greeting (salutation) said when meeting someone or acknowledging someones arrival or presence."),
-    word("Monty", 5,"https://api.dictionaryapi.dev/api/v2/entries/en/hello","A greeting (salutation) said when meeting someone or acknowledging someones arrival or presence."),
-    word("Monty", 5,"https://api.dictionaryapi.dev/api/v2/entries/en/hello","A greeting (salutation) said when meeting someone or acknowledging someones arrival or presence."),
-    word("Monty", 5,"https://api.dictionaryapi.dev/api/v2/entries/en/hello","A greeting (salutation) said when meeting someone or acknowledging someones arrival or presence.")
-]  
-p=schema.dump(map(lambda a : a  ,l))
-print((p))
+
 
 

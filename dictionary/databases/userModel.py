@@ -17,16 +17,6 @@ class UserSchema(Schema):
             password=fields.Str()
             created_at = fields.DateTime()
            
-user_data = {'email': '2023-02-07T11:56:30.355686',
- 'name': 'A greeting (salutation) said when meeting someone or '
-                'acknowledging someones arrival or presence.',
- 'password': '5',
- 
- }
-
-schema=UserSchema()
-result = schema.load(user_data)
-print(result)
 
 
 class UserLogging(object):
