@@ -14,7 +14,7 @@ const queryClient = new QueryClient()
 
 function App() {
  var user=false
-
+ 
 
   const router= createBrowserRouter(
  createRoutesFromElements(
@@ -41,11 +41,10 @@ function App() {
 const Root =()=>{
   return <QueryClientProvider client={queryClient}>
    <div className="header"> 
-    <Link to="/" >Home   </Link>
-    
-    <Link to="/reg">     Reg</Link>
-    <Link to="/user">     User</Link>
-    <Link to="/login">     Login</Link>
+    <Link to="/" >Home</Link> 
+    <Link to="/reg">Reg</Link>
+    <Link to="/user">User</Link>
+    <Link to="/login">Login</Link>
   </div>
   <div>
     <Outlet/>

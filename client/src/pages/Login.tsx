@@ -13,14 +13,14 @@ function User() {
 
     
     
-    const addToken=authStore((state)=>state.setToken)
+    const addToken=authStore((state:any)=>state.setToken)
     
-    const deleteToken=authStore((state)=>state.removeToken)
+    const deleteToken=authStore((state:any)=>state.removeToken)
 
     const [errMail,setErrMail]=useState('')
 
 
-    const postAuth=async(req)=>{
+    const postAuth=async(req:any)=>{
     
         const options = {
           headers: {
