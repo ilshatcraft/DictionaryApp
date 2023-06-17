@@ -23,3 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 dictionary-b05f2-firebase-adminsdk-vikws-fd957889d2.json
+
+parser.py
