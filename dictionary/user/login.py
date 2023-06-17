@@ -2,7 +2,6 @@ import datetime as dt
 from flask import  request, jsonify, make_response
 import json
 import hashlib
-from marshmallow import Schema, fields
 from databases import userModel 
 from database import database
 import jwt
@@ -23,7 +22,7 @@ def login():
    
     
     Users=database.get_ref("/Users").get()
-    
+
     mails = Users.keys()
    
     try:
