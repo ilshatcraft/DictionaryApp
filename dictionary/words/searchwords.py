@@ -1,51 +1,61 @@
 
-import Levenshtein
 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+        
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+        
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_word = True
+        
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_word
+    
+    def autocomplete(self, prefix, max_distance):
+        results = []
+        node = self.root
 
-# Open the file for reading
+    # Traverse the trie to find the node corresponding to the prefix
+        for char in prefix:
+          if char not in node.children:
+            return results
+          node = node.children[char]
+
+    # Use depth-first search to find all words with distance <= max_distance
+        stack = [(node, prefix, 0)]
+        while stack:
+            node, word, distance = stack.pop()
+            if node.is_word and distance <= max_distance:
+              results.append((word, distance))
+            if distance >= max_distance:
+              continue
+            for char, child in node.children.items():
+             new_distance = distance + (char != word[len(prefix)+distance] if len(word) > len(prefix)+distance else 1)
+             stack.append((child, word+char, new_distance))
+
+    # Sort results by distance (best match first)
+        results.sort(key=lambda x: x[1])
+
+        return [result[0] for result in results]
+
+    
+    
+trie = Trie()
 with open(r'E:\ILSHAT\work\python\backend\dictionary\words\english.txt', encoding='utf-8') as file:
-    # Read the contents of the file into a list, with each line as a separate element
-    try:
-        words = [line.strip() for line in file]
-    except:
-        pass 
-    finally:
-        file.close()
-
-def binary_search_similar(words, target_letters, max_distance):
-    left = 0
-    right = len(words) - 1
-    matches = []
-    
-    while left <= right:
-        mid = (left + right) // 2
-        word = words[mid]
-        distance = Levenshtein.distance(word, target_letters)
-        if distance <= max_distance:
-            matches.append((mid, distance))
-        if word < target_letters:
-            left = mid + 1
-        else:
-            right = mid - 1
-    
-    return matches
-
-def autocomplete(target_letters):
-    sorted_words = words
-    max_distance = 10
-
-# Get matches and their distances
-    matches = binary_search_similar(sorted_words, target_letters, max_distance)
-
-# Sort matches by distance (best match first)
-    matches.sort(key=lambda x: x[1])
-
-    if len(matches) > 0:
-        sorted_matches=[]
-        for match in matches:
-            index, distance = match
-            sorted_matches.append(sorted_words[index])
-        return(sorted_matches)
-    else:
-        return(target_letters)
-
+    for line in file:
+        word = line.strip()
+        trie.insert(word)

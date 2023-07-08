@@ -21,6 +21,13 @@ socketio = SocketIO(app)
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 
+
+trie = searchwords.Trie()
+with open(r'E:\ILSHAT\work\python\backend\dictionary\words\english.txt', encoding='utf-8') as file:
+        for line in file:
+         word = line.strip()
+         trie.insert(word)
+
 @app.route('/')
 def hello():
     return jsonify('hi')
@@ -54,6 +61,8 @@ def wordsget():
     
 @socketio.on('connect', namespace='/searchwords')
 def specific_connect():
+   
+
     emit('connected', {'data': 'Connected to specific route'})
 
 @socketio.on('disconnect', namespace='/searchwords')
@@ -64,7 +73,7 @@ def specific_disconnect():
 def handle_message(message):
     print('Received message: ' + message)
     print(message)
-    autocompleted = (searchwords.autocomplete(message))
+    autocompleted = (searchwords.trie.autocomplete(message,max_distance=3))[:5]
     print(autocompleted)
     emit('response', (autocompleted))
 if __name__ == '__main__':

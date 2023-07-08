@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@mantine/core": "^6.0.16",
+    "@mantine/hooks": "^6.0.16",
     "@tanstack/react-query": "^4.29.3",
     "@types/socket.io-client": "^3.0.0",
     "ky": "^0.33.2",

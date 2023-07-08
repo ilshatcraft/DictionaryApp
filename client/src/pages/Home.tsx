@@ -1,15 +1,18 @@
 import ky from "ky"
 import { io } from 'socket.io-client';
 import {useEffect,useState } from 'react'
-import Select from 'react-select'
+
+import { Autocomplete } from '@mantine/core';
 
 import AsyncSelect from 'react-select/async';
+
+
 
 
 const Home = () => {
 
 
-  const options =([ 
+  const [options, setOptions] =useState([ 
 { value: 'type', label: 'type' },
 { value: 'to', label: 'to' },
 { value: 'find', label: 'find' },
@@ -67,28 +70,35 @@ const [socket, setSocket] = useState<SocketIOClient.Socket>();
         socket.on('response', (data: any) => {
           console.log('received data ' + data);
           const list = data.toString().split(',');
+          console.log(list)
           let newOptions = [];
-          for (let i of list) {
-            newOptions.push({ value: i, label: i });
+          for (let i in list) {
+            newOptions.push({ value: list[i], label: list[i] });
+            if (i=="3"){break}
           }
           resolve(newOptions);
         });
       });
-      return words;
+      setOptions(words);
     } catch (error) {
       console.error(error);
     }
   };
   
+const change =(value:string)=>{
+  setValue(value)
+  handleChange(value)
+}
+const filter =()=>{
+  return true
+}
 
-
-
-
+  const [value, setValue] = useState('');
     
     return ( <>
-  
+  <Autocomplete value={value} onChange={change}  data={options} filter={filter} />
 
-<AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} />
+
     </> );
 }
  
