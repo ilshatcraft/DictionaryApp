@@ -1,9 +1,14 @@
 from flask import Flask, jsonify 
 from flask_cors import CORS
 
-from words import words
+from words import words,searchwords
 from user import login,registration
 from user.tokencheck import token_required
+from flask_socketio import SocketIO, emit
+
+
+
+
 
 
 app = Flask(__name__)
@@ -11,6 +16,10 @@ CORS(app)
 
 app.debug = True
 
+socketio = SocketIO(app)
+
+
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 @app.route('/')
 def hello():
@@ -41,5 +50,23 @@ def reg():
 def wordsget():
     words.getWords()
 
+
+    
+@socketio.on('connect', namespace='/searchwords')
+def specific_connect():
+    emit('connected', {'data': 'Connected to specific route'})
+
+@socketio.on('disconnect', namespace='/searchwords')
+def specific_disconnect():
+    print('Client disconnected')
+    
+@socketio.on('message', namespace='/searchwords')
+def handle_message(message):
+    print('Received message: ' + message)
+    print(message)
+    autocompleted = (searchwords.autocomplete(message))
+    print(autocompleted)
+    emit('response', (autocompleted))
 if __name__ == '__main__':
+    
     app.run(debug=True)
