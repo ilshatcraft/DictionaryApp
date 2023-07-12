@@ -4,7 +4,7 @@
 /client/node_modules
 /client/.pnp
 .pnp.js
-/dictionary/dict
+/dictionary/dict/*
 
 # testing
 /coverage
