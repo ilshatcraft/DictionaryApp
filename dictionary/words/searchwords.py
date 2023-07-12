@@ -55,7 +55,7 @@ class Trie:
     
     
 trie = Trie()
-with open(r'E:\ILSHAT\work\python\backend\dictionary\words\english.txt', encoding='utf-8') as file:
+with open(r'words/english.txt', encoding='utf-8') as file:
     for line in file:
         word = line.strip()
         trie.insert(word)

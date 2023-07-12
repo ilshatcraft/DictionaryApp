@@ -1,5 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+**/__pycache__/
 # dependencies
 /client/node_modules
 /client/.pnp
@@ -22,7 +22,7 @@
 
 env.txt
 
-**/__pycache__/
+
 
 npm-debug.log*
 yarn-debug.log*
