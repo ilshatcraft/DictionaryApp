@@ -1,0 +1,28 @@
+
+$primary-color: #000000;
+$secondary-color: #bfbfbf;
+$text-color: #ffffff;
+
+.app.light{
+ 
+  background-image: url(./assets/imgs/background.png);
+  background-size: cover;
+  background-position: center center;
+  
+    button {
+      background-color: #e6e6e6;
+      color: #000000;
+    }
+  
+    a {
+      color: #bfbfbf;
+    }
+  
+    h1, h2, h3 {
+      color: #ffffff;
+    }
+  
+    p {
+      color: #bfbfbf;
+    }
+  }

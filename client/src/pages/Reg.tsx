@@ -6,6 +6,8 @@ import { Navigate ,redirect ,useNavigate} from "react-router-dom";
 import "./Reg.scss"
 import ky from 'ky'
 
+
+
 const Reg = () => {
   const [errMail,setErrMail]=useState('')
   const navigate = useNavigate()
