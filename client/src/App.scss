@@ -1,21 +1,15 @@
+@import './colorscheme.scss';
 
 a{
   text-decoration: none;
-  color: black;
+
 }
 
-:root{
 
- justify-content: center;
- margin: 0 auto;
- padding: 2rem;
- display: flex;
+
+.links{
  
-}
-
-
-.header{
-  
+  width: 100%;
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -24,10 +18,11 @@ a{
   padding: .5rem .8rem .5rem .8rem;
   margin: .9vw 0 ;
   border:0;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 20px;
   text-align: center;
   box-shadow: 2;
+  
 }
 .coloricon{
   margin-right: 0;

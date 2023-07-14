@@ -1,13 +1,19 @@
 
-$primary-color: #000000;
-$secondary-color: #bfbfbf;
-$text-color: #ffffff;
+$primary-color: #9CD9D2;
+$secondary-color: #23606F;
+$text-color: #23606F;
+$border-color:#44494B;
+
+[data-theme="dark"] {
+  $primary-color: #C64330;
+$secondary-color: #23606F;
+$text-color: #C64330;
+$border-color:#F3F4F4;
+}
 
 .app.light{
+  
  
-  background-image: url(./assets/imgs/background.png);
-  background-size: cover;
-  background-position: center center;
   
     button {
       background-color: #e6e6e6;

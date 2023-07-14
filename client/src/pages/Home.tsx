@@ -6,7 +6,7 @@ import { Autocomplete } from '@mantine/core';
 
 import AsyncSelect from 'react-select/async';
 
-
+import './Reg.scss'
 
 
 const Home = () => {
@@ -96,8 +96,9 @@ const filter =()=>{
   const [value, setValue] = useState('');
     
     return ( <>
+    <div className="form-box">
   <Autocomplete value={value} onChange={change}  data={options} filter={filter} />
-
+  </div>
 
     </> );
 }
