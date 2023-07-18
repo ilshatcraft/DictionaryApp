@@ -19,7 +19,10 @@
   display: flex;
   justify-content: center;
 
-  
+
 }
 
 *{color: $text-color;}
+body{
+  background-color: transparent;
+}
