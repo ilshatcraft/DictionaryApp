@@ -70,7 +70,7 @@ const Reg = () => {
 
     return ( 
   <>
-    <form className="form-box" onSubmit={handleSubmit(onSubmit)} >
+    <form className="form-box " onSubmit={handleSubmit(onSubmit)} >
  <div className="Row" >
           <input placeholder="email" {...register("email", { required:  "This field is required", maxLength: 25 , pattern: {
             

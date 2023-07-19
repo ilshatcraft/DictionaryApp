@@ -1,4 +1,4 @@
-@import '../colorscheme.scss';
+
 
 
 *{
@@ -16,19 +16,19 @@
 .form-box{
 
   margin: 0vw;
-  padding: .5rem .8rem .5rem .8rem;
+  padding: .5rem .6rem .5rem .8rem;
   position:relative; 
   
 }
 .form-box input, textarea{
  
-
+  background-color: transparent;
   display: block;
-  width: 20rem;
+  width: 18.75rem;
   
   padding: .5rem .8rem .5rem .8rem;
   margin: .9vw 0 ;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 20px;
   text-align: center;
@@ -36,8 +36,9 @@
  
 }
 .form-box [type="submit"]:hover {
-  background: $primary-color;
+  background: var(--primary-color);
   cursor: pointer;
+  --text-color:--secondary-text-color;
 
 }
 .form-box span{
