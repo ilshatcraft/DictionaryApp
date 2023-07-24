@@ -1,7 +1,7 @@
 import { useState,useEffect} from 'react'
 import Home from './pages/Home'
 import Reg from './pages/Reg'
-import {createBrowserRouter,createRoutesFromElements,Link,Route,Outlet, RouterProvider} from 'react-router-dom'
+import {createBrowserRouter,createRoutesFromElements,Link,Route,Outlet, RouterProvider, useLocation} from 'react-router-dom'
 import './App.scss'
 import User from './pages/User'
 import Login from './pages/Login'
@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider, useQuery} from 'react-query';
 
 
 import { ActionIcon, ColorScheme } from '@mantine/core';
+import Word from './pages/Word'
 
 const queryClient = new QueryClient()
 
@@ -20,9 +21,9 @@ const queryClient = new QueryClient()
 
 function App(props) {
 
-
   
-
+  
+console.log()
  var user=false
  
   const router= createBrowserRouter(
@@ -32,6 +33,9 @@ function App(props) {
 
      <Route  path="/reg" element={<Reg/>}/>
       <Route  path="/login" element={<Login/>}/> 
+
+       <Route  path="/words/*" element={<Word/>}/> 
+     {/* <Route  path={"/words/"+`${word}`} element={<Word/>}/>  */}
      <Route  path="/user" element={<ProtectedRoute > <User/></ProtectedRoute>}/> 
 
      <Route path="*" element={<p>There's nothing here: 404!</p>} />

@@ -51,7 +51,7 @@ const ic=Icon(colorScheme)
   return (<>
   <div className={ style }> 
   <div>
-  <ActionIcon  size="xl" radius="xs" className='coloricon' onClick={()=>setColorScheme(colorScheme=='light'?'dark':'light')}>
+  <ActionIcon variant="transparent" size="xl" radius="xs" className='coloricon' onClick={()=>setColorScheme(colorScheme=='light'?'dark':'light')}>
 
   {ic}
 
