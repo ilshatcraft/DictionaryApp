@@ -10,6 +10,10 @@ import './Reg.scss'
 
 import { redirect } from "react-router-dom";
 
+
+import { useNavigate } from "react-router-dom";
+
+
 const Home = () => {
 
 
@@ -31,7 +35,7 @@ const promiseOptions = (inputValue: string) =>
 
 const [socket, setSocket] = useState<SocketIOClient.Socket>();
 
-  
+const navigate = useNavigate();
 
   useEffect(() => {
     if (!socket) return;
@@ -80,6 +84,8 @@ const [socket, setSocket] = useState<SocketIOClient.Socket>();
 const change =(value:string)=>{
   setValue(value)
   handleChange(value)
+
+
 }
 const filter =()=>{
   return true
@@ -96,12 +102,13 @@ const socketDisconected=()=>{
   const [value, setValue] = useState('');
     
 
-  const handleSelectOption = (selectedOption:string) => {
+  const handleSelectOption = (value:{}) => {
     // Here, you can add any additional logic related to the selected option if needed
-    console.log('Selected Option:', selectedOption);
-
+    console.log('Selected Option:', value.value);
+  
+    
     // Redirect to a new page using the history.push method
-     redirect('/words/'+`${selectedOption}`);
+    return(navigate('/words/'+`${value.value}`))
   };
 
 
@@ -114,7 +121,7 @@ const socketDisconected=()=>{
   filter={filter}
   onDropdownOpen={()=>{socketConnected()}}
    onDropdownClose={()=>{socketDisconected()}}
-   onSelect={()=>handleSelectOption(value)}
+   onItemSubmit={(item: AutocompleteItem) => handleSelectOption(item)}
    />
   </div>
 
