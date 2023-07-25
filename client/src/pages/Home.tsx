@@ -8,6 +8,7 @@ import AsyncSelect from 'react-select/async';
 
 import './Reg.scss'
 
+import { redirect } from "react-router-dom";
 
 const Home = () => {
 
@@ -30,16 +31,7 @@ const promiseOptions = (inputValue: string) =>
 
 const [socket, setSocket] = useState<SocketIOClient.Socket>();
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:5000/searchwords");
-    setSocket(newSocket);
-
-    // Clean up the socket connection when the component unmounts
-    return () => {
-      newSocket.disconnect();
-
-    }
-  }, []);
+  
 
   useEffect(() => {
     if (!socket) return;
@@ -93,11 +85,37 @@ const filter =()=>{
   return true
 }
 
+
+const socketConnected=()=>{
+const newSocket = io("http://localhost:5000/searchwords");
+    setSocket(newSocket);}
+const socketDisconected=()=>{
+  return socket.disconnect();
+}
+
   const [value, setValue] = useState('');
     
+
+  const handleSelectOption = (selectedOption:string) => {
+    // Here, you can add any additional logic related to the selected option if needed
+    console.log('Selected Option:', selectedOption);
+
+    // Redirect to a new page using the history.push method
+     redirect('/words/'+`${selectedOption}`);
+  };
+
+
     return ( <>
     <div className="form-box">
-  <Autocomplete value={value} onChange={change}  data={options} filter={filter} />
+  <Autocomplete 
+  value={value} 
+  onChange={change}  
+  data={options} 
+  filter={filter}
+  onDropdownOpen={()=>{socketConnected()}}
+   onDropdownClose={()=>{socketDisconected()}}
+   onSelect={()=>handleSelectOption(value)}
+   />
   </div>
 
     </> );

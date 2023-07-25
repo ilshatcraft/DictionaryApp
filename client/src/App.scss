@@ -68,8 +68,7 @@ a{
   
 
 $background-image-link:url(./assets/imgs/background.png);
-  
-  height:100vh;
+min-height: 100vh; 
   width: 100vw;
   background-image: $background-image-link;
   background-size: cover;
@@ -104,8 +103,8 @@ $background-image-link:url(./assets/imgs/background.png);
 
 
 $background-image-link:url(./assets/imgs/backgroundblack.png);
-  
-  height:100vh;
+min-height: 100vh;
+ 
   width: 100vw;
   background-image: $background-image-link;
   background-size: cover;
